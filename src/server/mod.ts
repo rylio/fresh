@@ -1,5 +1,5 @@
 import { ServerContext } from "./context.ts";
-import { serve } from "./deps.ts";
+import { serve, serveTls } from "./deps.ts";
 export { Status } from "./deps.ts";
 import {
   AppModule,
@@ -8,6 +8,7 @@ import {
   MiddlewareModule,
   RouteModule,
   StartOptions,
+  StartTlsOptions,
   UnknownPageModule,
 } from "./types.ts";
 export type {
@@ -68,5 +69,17 @@ export async function start(routes: Manifest, opts: StartOptions = {}) {
     await Deno.serve(ctx.handler() as Deno.ServeHandler, opts);
   } else {
     await serve(ctx.handler(), opts);
+  }
+}
+
+
+export async function startTls(routes: Manifest, opts: StartTlsOptions) {
+  const ctx = await ServerContext.fromManifest(routes, opts);
+  opts.port ??= 8443;
+  if (opts.experimentalDenoServe === true) {
+    // @ts-ignore as `Deno.serve` is still unstable.
+    await Deno.serveTls(ctx.handler() as Deno.ServeHandler, opts);
+  } else {
+    await serveTls(ctx.handler(), opts);
   }
 }

@@ -1,5 +1,5 @@
 import { ComponentType } from "preact";
-import { ConnInfo, rutt, ServeInit } from "./deps.ts";
+import { ConnInfo, rutt, ServeInit, ServeTlsInit } from "./deps.ts";
 import { InnerRenderFunction, RenderContext } from "./render.ts";
 
 // --- APPLICATION CONFIGURATION ---
@@ -12,6 +12,17 @@ export type StartOptions = ServeInit & FreshOptions & {
    * This option is experimental and may be removed in a future Fresh release.
    */
   experimentalDenoServe?: boolean;
+};
+
+
+export type StartTlsOptions = ServeTlsInit & FreshOptions & {
+  /**
+   * UNSTABLE: use the `Deno.serveTls` API as the underlying HTTP server instead of
+   * the `std/http` API. Do not use this in production.
+   *
+   * This option is experimental and may be removed in a future Fresh release.
+   */
+  experimentalDenoServeTls?: boolean;
 };
 
 export interface FreshOptions {
